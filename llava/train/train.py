@@ -75,7 +75,8 @@ class DataArguments:
     image_folder: Optional[str] = field(default=None)
     image_aspect_ratio: str = 'square'
     crop_ratio: int = 0.65
-    crop: bool = True
+    crop: bool = False
+    sampling_ratio: float = 1.0
     
 
 @dataclass
@@ -666,7 +667,13 @@ class LazySupervisedDataset(Dataset):
                  data_args: DataArguments):
         super(LazySupervisedDataset, self).__init__()
         list_data_dict = json.load(open(data_path, "r"))
-
+        
+        import random
+        if data_args.sampling_ratio < 1.0:
+            sampled_num = int(len(list_data_dict) * data_args.sampling_ratio)
+            sampled_num = max(1, sampled_num) if data_args.sampling_ratio > 0 else 0
+            list_data_dict = random.sample(list_data_dict, sampled_num)
+        
         rank0_print("Formatting inputs...Skip in lazy mode")
         self.tokenizer = tokenizer
         self.list_data_dict = list_data_dict

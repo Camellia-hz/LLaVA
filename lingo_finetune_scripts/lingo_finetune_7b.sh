@@ -10,7 +10,7 @@ torchrun --nproc_per_node=8 \
     --master_addr=${MASTER_ADDR} \
     --master_port=${MASTER_PORT} \
     llava/train/train_mem.py \
-    --deepspeed ./scripts/zero3_offload.json \
+    --deepspeed ./scripts/zero3.json \
     --model_name_or_path /mnt/csi-data-aly/shared/public/haozhou/checkpoints/LLaVA/llava-v1.5-7b \
     --version v1 \
     --data_path ./playground/data/LingoQA/train.json \
@@ -22,12 +22,12 @@ torchrun --nproc_per_node=8 \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-v1.5-7b-task \
-    --exp_name finetune_llava_v1.5_7b_lingoqa \
+    --output_dir ./checkpoints/llava-v1.5-7b-task-0.5data \
+    --exp_name finetune_llava_v1.5_7b_lingoqa_0.5data \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 1 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 2 \
     --evaluation_strategy "no" \
     --save_strategy "epoch" \
     --save_steps 50000 \
@@ -38,11 +38,12 @@ torchrun --nproc_per_node=8 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
-    --model_max_length 3072 \
+    --model_max_length 4096 \
     --gradient_checkpointing True \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
-    --report_to tensorboard
+    --report_to tensorboard \
+    --sampling_ratio 0.5
 
 # multi nodes
 # --nnodes=${WORLD_SIZE} \
