@@ -24,12 +24,12 @@ torchrun --nproc_per_node=8 \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-v1.5-7b-task-hop-64tokens \
-    --exp_name finetune_llava_v1.5_7b_lingoqa_hop_64tokens \
+    --output_dir ./checkpoints/llava-v1.5-7b-task-hop-0.5data \
+    --exp_name finetune_llava_v1.5_7b_lingoqa_hop_0.5data \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 1 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 2 \
     --evaluation_strategy "no" \
     --save_strategy "epoch" \
     --save_steps 50000 \
@@ -40,13 +40,14 @@ torchrun --nproc_per_node=8 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
-    --model_max_length 3072 \
+    --model_max_length 4096 \
     --gradient_checkpointing True \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
     --report_to tensorboard \
     --crop False \
-    --feature_fusion_strategy one-cross
+    --feature_fusion_strategy one-cross \
+    --sampling_ratio 0.5
 
 # multi nodes
 # --nnodes=${WORLD_SIZE} \
