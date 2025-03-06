@@ -13,7 +13,7 @@ torchrun --nproc_per_node=8 \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path /mnt/csi-data-aly/shared/public/haozhou/checkpoints/LLaVA/llava-v1.5-7b \
     --version v1 \
-    --data_path ./playground/data/LingoQA/train_multi.json \
+    --data_path ./playground/data/LingoQA/train_sampled_0.25_v1.json \
     --vision_tower /mnt/csi-data-aly/shared/public/haozhou/checkpoints/clip-vit-large-patch14-336 \
     --prompt_tower /mnt/csi-data-aly/shared/public/haozhou/checkpoints/dinov2-large \
     --object_tower /mnt/csi-data-aly/shared/public/haozhou/checkpoints/mask2former-swin-large-cityscapes-semantic \
@@ -24,8 +24,8 @@ torchrun --nproc_per_node=8 \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./checkpoints/llava-v1.5-7b-task-hop-0.25data \
-    --exp_name finetune_llava_v1.5_7b_lingoqa_hop_0.25data \
+    --output_dir ./checkpoints/llava-v1.5-7b-task-hop-0.25data-distribution \
+    --exp_name finetune_llava_v1.5_7b_lingoqa_hop_0.25data_distribution \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 1 \
@@ -47,7 +47,7 @@ torchrun --nproc_per_node=8 \
     --report_to tensorboard \
     --crop False \
     --feature_fusion_strategy one-cross \
-    --sampling_ratio 0.25
+    --sampling_ratio 1.0
 
 # multi nodes
 # --nnodes=${WORLD_SIZE} \
