@@ -666,7 +666,9 @@ class LazySupervisedDataset(Dataset):
                  tokenizer: transformers.PreTrainedTokenizer,
                  data_args: DataArguments):
         super(LazySupervisedDataset, self).__init__()
-        list_data_dict = json.load(open(data_path, "r"))
+        with open(data_path, 'r', encoding='utf-8') as file:
+            list_data_dict = json.load(file)
+        # list_data_dict = json.load(open(data_path, "r"))
         
         import random
         if data_args.sampling_ratio < 1.0:
