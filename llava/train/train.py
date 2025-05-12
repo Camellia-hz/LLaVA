@@ -704,8 +704,16 @@ class LazySupervisedDataset(Dataset):
                  tokenizer: transformers.PreTrainedTokenizer,
                  data_args: DataArguments):
         super(LazySupervisedDataset, self).__init__()
-        list_data_dict = json.load(open(data_path, "r"))
+        # list_data_dict = json.load(open(data_path, "r"))
         
+        from datasets import load_dataset, concatenate_datasets
+        
+        dataset = load_dataset("/mnt/csi-data-aly/shared/public/haozhou/data/KaiChen1998/coda-lm-llava-format/", name="English", split='Train')
+        dataset_val = load_dataset("/mnt/csi-data-aly/shared/public/haozhou/data/KaiChen1998/coda-lm-llava-format/", name="English", split='Val')
+        list_data_dict = concatenate_datasets([dataset, dataset_val])
+        print("Dataset length: ", len(list_data_dict))
+        # dataset_mini = load_dataset("/mnt/csi-data-aly/shared/public/haozhou/data/KaiChen1998/coda-lm-llava-format/", name="English", split='Mini')
+        # list_data_dict = dataset_mini
         import random
         if data_args.sampling_ratio < 1.0:
             sampled_num = int(len(list_data_dict) * data_args.sampling_ratio)
@@ -769,14 +777,15 @@ class LazySupervisedDataset(Dataset):
             processor = self.data_args.image_processor
             prompt_processor = self.data_args.image_processor_prompt
             object_processor = self.data_args.image_processor_object
-            
+            image_file = [image_file]
             if isinstance(image_file, list):
                 image = []
                 for img_file in image_file:
                     if image_folder is not None:
                         image.append(Image.open(os.path.join(image_folder, img_file)).convert('RGB'))
                     else:
-                        sample = Image.open(img_file).convert('RGB')
+                        # sample = Image.open(img_file).convert('RGB')
+                        sample = img_file.convert('RGB')
                         if self.crop:
                             crop_img = self.center_crop(sample)
                             image.extend([sample,crop_img])
